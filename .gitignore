@@ -1,0 +1,22 @@
+# Virtual environment
+venv/
+.env
+*.env
+
+# Arquivos temporários
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.DS_Store
+
+# VSCode
+.vscode/
+
+# PDFs e imagens geradas
+files/etiquetas/*.pdf
+files/etiquetas/*.png
+
+# Base de dados local (se não quiser versionar)
+# files/recebimentos.csv
+# files/entregas.csv

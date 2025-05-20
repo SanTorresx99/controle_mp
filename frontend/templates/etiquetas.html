@@ -1,0 +1,59 @@
+<!-- frontend/templates/etiquetas.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Etiquetas Geradas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    a {
+      color: #0077cc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🖨️ Etiquetas Geradas</h2>
+    <ul>
+      {% for caminho in etiquetas %}
+      <li>
+        <a href="/{{ caminho }}" target="_blank">{{ caminho.split('/')[-1] }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <p style="text-align: center; margin-top: 20px;">
+      <a href="/recebimento/web">⬅️ Voltar para o Recebimento</a>
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Recebimento de Matéria-Prima</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 25px;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📦 Recebimento de Matéria-Prima</h2>
+    <form id="formRecebimento">
+      <label for="numero_nf">Número da NF:</label>
+      <input type="number" id="numero_nf" required>
+
+      <label for="fornecedor">Fornecedor:</label>
+      <input type="text" id="fornecedor" list="lista_fornecedores" oninput="buscarFornecedores()" autocomplete="off" required>
+      <datalist id="lista_fornecedores"></datalist>
+
+      <label for="data_recebimento">Data do Recebimento:</label>
+      <input type="date" id="data_recebimento" required>
+
+      <label for="id_produto">Produto:</label>
+      <input type="text" id="id_produto" list="lista_produtos" oninput="buscarProdutos()" autocomplete="off" required>
+      <datalist id="lista_produtos"></datalist>
+
+      <label for="quantidade_total">Quantidade Total:</label>
+      <input type="number" id="quantidade_total" step="0.01" required>
+
+      <label for="quantidade_volumes">Quantidade de Volumes:</label>
+      <input type="number" id="quantidade_volumes" required>
+
+      <label for="usuario">Usuário:</label>
+      <input type="text" id="usuario" required>
+
+      <label for="quantidades_por_volume">(Opcional) Quantidades por Volume:</label>
+      <textarea id="quantidades_por_volume" placeholder="Ex: 60,40,30"></textarea>
+
+      <button type="submit">Confirmar e Gerar Etiquetas</button>
+    </form>
+  </div>
+
+  <script>
+    async function buscarFornecedores() {
+      const termo = document.getElementById("fornecedor").value;
+      const lista = document.getElementById("lista_fornecedores");
+      lista.innerHTML = "";
+
+      if (termo.length < 2) return;
+      try {
+        const res = await fetch("/validacao/fornecedores?q=" + encodeURIComponent(termo));
+        const dados = await res.json();
+
+        dados.forEach(f => {
+          const opt = document.createElement("option");
+          const visivel = f.NOME_FANTASIA && f.NOME_FANTASIA !== f.NOME ? `${f.NOME_FANTASIA} - ${f.NOME}` : f.NOME;
+          opt.value = visivel;
+          lista.appendChild(opt);
+        });
+      } catch (err) {
+        console.error("Erro ao buscar fornecedores:", err);
+      }
+    }
+
+    async function buscarProdutos() {
+      const termo = document.getElementById("id_produto").value;
+      const lista = document.getElementById("lista_produtos");
+      lista.innerHTML = "";
+
+      if (termo.length < 2) return;
+      try {
+        const res = await fetch("/validacao/produtos?q=" + encodeURIComponent(termo));
+        const dados = await res.json();
+
+        dados.forEach(p => {
+          const opt = document.createElement("option");
+          opt.value = `${p.id_produto} - ${p.nome_produto}`;
+          lista.appendChild(opt);
+        });
+      } catch (err) {
+        console.error("Erro ao buscar produtos:", err);
+      }
+    }
+
+    document.getElementById("formRecebimento").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const quantidadeTotal = parseFloat(document.getElementById("quantidade_total").value);
+      const quantidadeVolumes = parseInt(document.getElementById("quantidade_volumes").value);
+      const quantidadesPorVolumeInput = document.getElementById("quantidades_por_volume").value;
+      const quantidadesPersonalizadas = quantidadesPorVolumeInput
+        .split(',')
+        .map(q => parseFloat(q.trim()))
+        .filter(q => !isNaN(q));
+
+      if (quantidadesPorVolumeInput && quantidadesPersonalizadas.length > 0) {
+        const soma = quantidadesPersonalizadas.reduce((a, b) => a + b, 0);
+        if (quantidadesPersonalizadas.length !== quantidadeVolumes) {
+          alert("❌ O número de volumes informados não bate com as quantidades digitadas.");
+          return;
+        }
+        if (Math.abs(soma - quantidadeTotal) > 0.01) {
+          alert(`❌ Soma das quantidades (${soma}) difere do total (${quantidadeTotal}). Corrija antes de gerar as etiquetas.`);
+          return;
+        }
+      }
+
+      const payload = {
+        numero_nf: parseInt(document.getElementById("numero_nf").value),
+        fornecedor: document.getElementById("fornecedor").value,
+        data_recebimento: document.getElementById("data_recebimento").value,
+        id_produto: parseInt(document.getElementById("id_produto").value),
+        quantidade_total: quantidadeTotal,
+        quantidade_volumes: quantidadeVolumes,
+        usuario: document.getElementById("usuario").value,
+        quantidades_personalizadas: quantidadesPersonalizadas.length > 0 ? quantidadesPersonalizadas : null
+      };
+
+      try {
+        const res = await fetch("/recebimento/novo", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const resposta = await res.json();
+        alert("✅ Etiquetas geradas com sucesso!\n" + JSON.stringify(resposta, null, 2));
+      } catch (err) {
+        console.error("Erro ao enviar dados:", err);
+        alert("❌ Erro ao gerar etiquetas.");
+      }
+    });
+  </script>
+</body>
+</html>
