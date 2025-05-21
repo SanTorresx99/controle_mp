@@ -11,3 +11,8 @@ templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "frontend", "templa
 @router.get("/recebimento/web", response_class=HTMLResponse)
 def exibir_formulario_recebimento(request: Request):
     return templates.TemplateResponse("recebimento.html", {"request": request})
+
+@router.get("/login/web", response_class=HTMLResponse)
+def login_form(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+

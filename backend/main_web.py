@@ -5,7 +5,8 @@ from backend.api import (
     endpoints_validacao,
     endpoints_entrega,
     endpoints_etiqueta,
-    endpoints_frontend
+    endpoints_frontend,
+    endpoints_login
 )
 from fastapi.staticfiles import StaticFiles
 
@@ -32,3 +33,5 @@ app.include_router(endpoints_etiqueta.router, prefix="/etiqueta", tags=["Etiquet
 app.include_router(endpoints_frontend.router, tags=["Frontend"])
 #app.include_router(endpoints_etiqueta.router)
 app.mount("/files", StaticFiles(directory="files"), name="files")
+app.include_router(endpoints_login.router)
+app.mount("/static", StaticFiles(directory="frontend/static"), name="static")

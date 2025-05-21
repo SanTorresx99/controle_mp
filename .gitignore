@@ -1,22 +1,61 @@
-# Virtual environment
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
 venv/
-.env
+ENV/
+env/
+.venv/
+
+# IDEs e arquivos de configuração
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+*.log
+
+# Configs locais
 *.env
+.env.*
+*.ini
+*.cfg
 
 # Arquivos temporários
-__pycache__/
-*.pyc
-*.pyo
-*.log
+*.bak
+*.tmp
+*.swp
 .DS_Store
+Thumbs.db
 
-# VSCode
-.vscode/
 
 # PDFs e imagens geradas
 files/etiquetas/*.pdf
 files/etiquetas/*.png
 
-# Base de dados local (se não quiser versionar)
-# files/recebimentos.csv
-# files/entregas.csv
+# CSVs de uso temporário (ajuste conforme necessário)
+files/*.csv
+!files/exemplos.csv  # Exceção: manter um CSV de exemplo, se existir
+
+# Pytest / coverage
+.pytest_cache/
+htmlcov/
+.coverage
+.tox/
+.nox/
+
+# Compilados C/C++
+*.so
+*.o
+*.out
+*.a
+*.dll
+
+# MyPy
+.mypy_cache/
+
+# FastAPI Swagger cache
+.openapi.json

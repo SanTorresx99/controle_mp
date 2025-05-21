@@ -1,0 +1,12 @@
+[
+  {
+    "usuario": "admin",
+    "senha_hash": "$2b$12$3395x/usC7PLeKoJb3lT5.bxyfHqb3kh./3grNPwHrjB7XFpW7uKG",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0Nzg1NzExMn0.fUsYtq9fhVCBs__gw6MRsWEsvcqvQMJuzCO6Rj5fC28"
+  },
+  {
+    "usuario": "admin",
+    "senha_hash": "$2b$12$oYsHeIQr9BIyxgB5EoKrQOp/YjY9mL21C1QxmhPAJ5bMkjcyrmn9G",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0Nzg1Nzc0NH0.B8jq067HozP1GSlXqO9Ba7952cYgZajVc0ngawQZQdA"
+  }
+]

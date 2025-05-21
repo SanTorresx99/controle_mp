@@ -14,11 +14,13 @@ ETIQUETA_DIR = "files/etiquetas"
 LABEL_WIDTH = 78 * mm
 LABEL_HEIGHT = 34 * mm
 
+
 def ajustar_tamanho_texto(canvas_obj, texto, max_largura, fonte="Helvetica", tamanho_inicial=10):
     tamanho = tamanho_inicial
     while canvas_obj.stringWidth(texto, fonte, tamanho) > max_largura and tamanho > 5:
         tamanho -= 1
     return tamanho
+
 
 def gerar_etiqueta(volume: dict):
     os.makedirs(ETIQUETA_DIR, exist_ok=True)
@@ -48,25 +50,26 @@ def gerar_etiqueta(volume: dict):
     c.drawString(5 * mm, 21 * mm, f"Qtd: {volume['quantidade']} {volume.get('unidade', '')}")
     c.drawRightString(LABEL_WIDTH - 5 * mm, 21 * mm, f"DT REC: {volume['data_recebimento']}")
 
-    # Código de barras ajustado (largura aumentada em ~40% e posição mais abaixo)
+    # Código de barras com largura aumentada e reposicionado mais abaixo
     c.drawImage(
         img_path,
-        3 * mm,             # posição X
-        6 * mm,             # posição Y
-        width=72 * mm,      # nova largura aumentada
-        height=15 * mm,     # altura reduzida levemente
-        preserveAspectRatio=True,
+        x=1 * mm,
+        y=4 * mm,  # Ajuste de altura mais abaixo
+        width=LABEL_WIDTH - 2 * mm,  # Aumentar largura para quase total
+        height=14 * mm,  # Altura reduzida
+        preserveAspectRatio=False,
         mask='auto'
     )
 
-    # Texto do código abaixo da imagem
-    c.setFont("Helvetica", 9)
-    c.drawCentredString(LABEL_WIDTH / 2, 2 * mm, volume['codigo_volume'])
+    # Texto do código abaixo da imagem - em negrito e centralizado
+    c.setFont("Helvetica-Bold", 10)
+    c.drawCentredString(LABEL_WIDTH / 2, 1 * mm, volume['codigo_volume'])
 
     c.showPage()
     c.save()
     os.remove(img_path)
     return caminho_pdf
+
 
 def gerar_etiquetas_em_lote(volumes: list):
     if not volumes:
@@ -100,26 +103,27 @@ def gerar_etiquetas_em_lote(volumes: list):
         c.drawString(5 * mm, 21 * mm, f"Qtd: {volume['quantidade']} {volume.get('unidade', '')}")
         c.drawRightString(LABEL_WIDTH - 5 * mm, 21 * mm, f"DT REC: {volume['data_recebimento']}")
 
-        # Código de barras ajustado (largura aumentada em ~40% e posição mais abaixo)
+        # Código de barras com largura aumentada e reposicionado
         c.drawImage(
             img_path,
-            3 * mm,             # posição X
-            6 * mm,             # posição Y
-            width=72 * mm,      # nova largura aumentada
-            height=15 * mm,     # altura reduzida levemente
-            preserveAspectRatio=True,
+            x=1 * mm,
+            y=4 * mm,
+            width=LABEL_WIDTH - 2 * mm,
+            height=14 * mm,
+            preserveAspectRatio=False,
             mask='auto'
         )
 
-        # Texto do código abaixo da imagem
-        c.setFont("Helvetica", 9)
-        c.drawCentredString(LABEL_WIDTH / 2, 2 * mm, volume['codigo_volume'])
+        # Texto do código abaixo da imagem - removido duplicação e centralizado
+        # c.setFont("Helvetica-Bold", 10)
+        # c.drawCentredString(LABEL_WIDTH / 2, 1 * mm, volume['codigo_volume'])
 
         os.remove(img_path)
         c.showPage()
 
     c.save()
     return caminho_pdf
+
 
 def limpar_etiquetas_antigas(dias: int = 2):
     if not os.path.exists(ETIQUETA_DIR):
