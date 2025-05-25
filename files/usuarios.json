@@ -1,7 +1,8 @@
 [
   {
-    "usuario": "admin",
-    "senha_hash": "$2b$12$3395x/usC7PLeKoJb3lT5.bxyfHqb3kh./3grNPwHrjB7XFpW7uKG",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0Nzg1NzExMn0.fUsYtq9fhVCBs__gw6MRsWEsvcqvQMJuzCO6Rj5fC28"
+    "usuario": "Sandro",
+    "senha_hash": "$2b$12$aZqABwU1abZfJOIu2omUSu3cL6Az5qw5.Ds0GNro4xZ70e.jI4ybG",
+    "nivel": "master",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJTYW5kcm8iLCJuaXZlbCI6Im1hc3RlciIsImV4cCI6MTc0ODM2ODcyN30._PRoPdJ0LW_wKxAe1E2QhlrTaE3K9ZMbsxOXCVhcZ38"
   }
 ]

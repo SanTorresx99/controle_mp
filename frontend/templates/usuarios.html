@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestão de Usuários</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
+    .container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background-color: #eee; }
+    .form-novo { margin-top: 30px; }
+    input, select { padding: 8px; width: calc(100% - 16px); margin-top: 5px; margin-bottom: 15px; }
+    button { padding: 10px 20px; cursor: pointer; background: #0077cc; color: white; border: none; border-radius: 5px; }
+    button:hover { background: #005fa3; }
+    .danger { background: #cc0000; margin-left: 10px; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .top-bar button { font-size: 14px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <h2>Gestão de Usuários</h2>
+    <button onclick="window.location.href='/painel/web'">Voltar ao Painel</button>
+  </div>
+
+  <table id="tabelaUsuarios">
+    <thead>
+      <tr>
+        <th>Usuário</th>
+        <th>Nível</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Populado via JS -->
+    </tbody>
+  </table>
+
+  <div class="form-novo">
+    <h3>Novo Usuário</h3>
+    <input type="text" id="novoUsuario" placeholder="Nome de usuário">
+    <input type="password" id="novaSenha" placeholder="Senha">
+    <select id="novoNivel">
+      <option value="usuario">Usuário</option>
+      <option value="gestor">Gestor</option>
+      <option value="master">Master</option>
+    </select>
+    <button onclick="criarUsuario()">Criar Usuário</button>
+  </div>
+</div>
+
+<script>
+function getAuthHeaders() {
+  const token = localStorage.getItem("token");
+  return { "Authorization": `Bearer ${token}` };
+}
+
+async function carregarUsuarios() {
+  const res = await fetch("/usuarios/listar", {
+    headers: getAuthHeaders()
+  });
+  const usuarios = await res.json();
+  const tbody = document.querySelector("#tabelaUsuarios tbody");
+  tbody.innerHTML = "";
+
+  usuarios.forEach(u => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${u.usuario}</td>
+      <td>${u.nivel}</td>
+      <td>
+        <button class="danger" onclick="excluirUsuario('${u.usuario}')">Excluir</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function criarUsuario() {
+  const usuario = document.getElementById("novoUsuario").value;
+  const senha = document.getElementById("novaSenha").value;
+  const nivel = document.getElementById("novoNivel").value;
+
+  const res = await fetch("/usuarios/criar", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+    body: JSON.stringify({ usuario, senha, nivel })
+  });
+
+  const data = await res.json();
+  alert(data.mensagem || data.detail || data.erro);
+  carregarUsuarios();
+}
+
+async function excluirUsuario(usuario) {
+  if (!confirm(`Excluir o usuário ${usuario}?`)) return;
+  const res = await fetch(`/usuarios/excluir/${usuario}`, {
+    method: "DELETE",
+    headers: getAuthHeaders()
+  });
+  const data = await res.json();
+  alert(data.mensagem || data.detail || data.erro);
+  carregarUsuarios();
+}
+
+carregarUsuarios();
+</script>
+</body>
+</html>

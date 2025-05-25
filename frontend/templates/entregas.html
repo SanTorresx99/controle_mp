@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Entrega de Volumes</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f2f2f2; padding: 30px; }
+    .container {
+      max-width: 480px; margin: auto; background: #fff; padding: 30px;
+      border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; margin-bottom: 20px; }
+    input, select, button {
+      width: 100%; padding: 10px; margin: 10px 0;
+      border-radius: 6px; border: 1px solid #ccc; font-size: 14px;
+    }
+    button {
+      background-color: #007bff; color: white; border: none;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    label { font-weight: bold; display: block; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📦 Registrar Entrega</h2>
+    <label for="codigoVolume">Código do Volume:</label>
+    <input type="text" id="codigoVolume" list="sugestoes" placeholder="Ex: MP-35820-1239-2" autocomplete="off" required>
+    <datalist id="sugestoes"></datalist>
+    <button onclick="registrar()">Confirmar Entrega</button>
+  </div>
+
+  <script>
+    async function registrar() {
+      const codigo = document.getElementById("codigoVolume").value.trim();
+      if (!codigo) return alert("Informe o código do volume.");
+
+      const res = await fetch(`/entregas/registrar/${codigo}`, { method: "POST" });
+      const data = await res.json();
+      alert(data.mensagem || data.detail || data.erro);
+    }
+
+    let timeout = null;
+    document.getElementById("codigoVolume").addEventListener("input", function () {
+      clearTimeout(timeout);
+      const valor = this.value;
+      if (valor.length < 2) return;
+
+      timeout = setTimeout(async () => {
+        try {
+          const res = await fetch(`/entregas/volumes?q=${encodeURIComponent(valor)}`);
+          if (!res.ok) return;
+          const sugestoes = await res.json();
+
+          const datalist = document.getElementById("sugestoes");
+          datalist.innerHTML = "";
+          sugestoes.forEach(cod => {
+            const opt = document.createElement("option");
+            opt.value = cod;
+            datalist.appendChild(opt);
+          });
+        } catch (e) {
+          console.error("Erro ao buscar sugestões:", e);
+        }
+      }, 300); // debounce
+    });
+  </script>
+</body>
+</html>

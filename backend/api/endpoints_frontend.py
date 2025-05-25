@@ -1,3 +1,5 @@
+# backend/api/endpoints_frontend.py
+
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -19,3 +21,11 @@ def login_form(request: Request):
 @router.get("/painel/web", response_class=HTMLResponse)
 def painel_web(request: Request):
     return templates.TemplateResponse("painel.html", {"request": request})
+
+@router.get("/usuarios/web", response_class=HTMLResponse)
+def usuarios_web(request: Request):
+    return templates.TemplateResponse("usuarios.html", {"request": request})
+
+@router.get("/entregas/web", response_class=HTMLResponse)
+def entregas_web(request: Request):
+    return templates.TemplateResponse("entregas.html", {"request": request})

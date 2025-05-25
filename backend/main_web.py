@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from backend.api import (
     endpoints_recebimento,
     endpoints_validacao,
     endpoints_entrega,
     endpoints_etiqueta,
     endpoints_frontend,
-    endpoints_login
+    endpoints_login,
+    endpoints_usuarios
 )
 from fastapi.staticfiles import StaticFiles
 
@@ -35,3 +37,5 @@ app.include_router(endpoints_frontend.router, tags=["Frontend"])
 app.mount("/files", StaticFiles(directory="files"), name="files")
 app.include_router(endpoints_login.router)
 app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
+app.include_router(endpoints_usuarios.router, prefix="/usuarios", tags=["Usuários"])
+app.include_router(endpoints_entrega.router, prefix="/entregas", tags=["Entrega"])
