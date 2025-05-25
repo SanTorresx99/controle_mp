@@ -85,10 +85,12 @@
       const resultado = document.getElementById("resultado");
 
       if (res.ok && data.token) {
-        resultado.innerHTML = `✅ Token gerado:<br><code>${data.token}</code>`;
-      } else {
-        resultado.innerHTML = `❌ Erro: ${data.erro || data.detail || "Falha desconhecida"}`;
-      }
+  localStorage.setItem('token', data.token);        // <-- SALVA O TOKEN
+  window.location.href = "/painel/web";             // <-- REDIRECIONA
+} else {
+  resultado.innerHTML = `❌ Erro: ${data.erro || data.detail || "Falha desconhecida"}`;
+}
+
     });
   </script>
 </body>

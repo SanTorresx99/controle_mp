@@ -16,3 +16,6 @@ def exibir_formulario_recebimento(request: Request):
 def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
+@router.get("/painel/web", response_class=HTMLResponse)
+def painel_web(request: Request):
+    return templates.TemplateResponse("painel.html", {"request": request})
