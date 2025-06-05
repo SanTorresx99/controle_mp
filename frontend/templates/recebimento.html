@@ -49,10 +49,28 @@
     button:hover {
       background-color: #005fa3;
     }
+    .top-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .top-buttons button {
+      width: 30%;
+      background-color: #6c757d;
+    }
+    .top-buttons button:hover {
+      background-color: #5a6268;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="top-buttons">
+      <button onclick="window.location.href='/painel/web'">Voltar</button>
+      <button id="btnDashboard" style="display: none" onclick="window.location.href='/dashboard/recebimento'">📊 Dashboard</button>
+      <button onclick="window.location.href='/etiqueta/reimpressao/web'">🏷️ Ver Etiquetas</button>
+    </div>
+
     <h2>📦 Recebimento de Matéria-Prima</h2>
     <form id="formRecebimento">
       <label for="numero_nf">Número da NF:</label>
@@ -175,6 +193,19 @@
         alert("❌ Erro ao gerar etiquetas.");
       }
     });
+
+    (function validarPermissao() {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.nivel === 'master' || payload.nivel === 'gestor') {
+          document.getElementById("btnDashboard").style.display = "inline-block";
+        }
+      } catch (e) {
+        console.warn("Erro ao verificar nível de acesso.", e);
+      }
+    })();
   </script>
 </body>
 </html>

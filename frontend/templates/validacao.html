@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Validação de NF vs MP</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 12px rgba(0,0,0,0.1); }
+    h2 { text-align: center; }
+    label { font-weight: bold; display: block; margin-top: 15px; }
+    input, select { padding: 10px; width: 100%; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; }
+    button { background-color: #0077cc; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #005fa3; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #eee; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📝 Validação de Notas vs Recebimento</h2>
+
+    <label for="numero_nf">Número da Nota Fiscal:</label>
+    <input type="text" id="numero_nf" placeholder="Digite o número da NF para buscar...">
+
+    <button onclick="validarNota()">Validar</button>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    async function validarNota() {
+      const nf = document.getElementById("numero_nf").value;
+      if (!nf) {
+        alert("Por favor, informe o número da nota fiscal.");
+        return;
+      }
+      try {
+        const res = await fetch(`/validacao/comparar/${nf}`);
+        const dados = await res.json();
+
+        let html = "";
+        if (dados.erro) {
+          html = `<p style='color:red'>Erro: ${dados.erro}</p>`;
+        } else {
+          html += "<h3>Resultado da Validação</h3>";
+          html += `<p><strong>Produto:</strong> ${dados.produto}</p>`;
+          html += `<p><strong>Quantidade Fiscal:</strong> ${dados.qtd_fiscal}</p>`;
+          html += `<p><strong>Quantidade Recebida:</strong> ${dados.qtd_recebida}</p>`;
+
+          if (Math.abs(dados.qtd_fiscal - dados.qtd_recebida) > 0.01) {
+            html += `<p style='color:red'><strong>Divergência Detectada</strong></p>`;
+          } else {
+            html += `<p style='color:green'><strong>Sem divergências.</strong></p>`;
+          }
+        }
+        document.getElementById("resultado").innerHTML = html;
+      } catch (err) {
+        console.error("Erro ao validar nota:", err);
+        alert("Erro ao buscar dados da NF.");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -4,5 +4,17 @@
     "senha_hash": "$2b$12$aZqABwU1abZfJOIu2omUSu3cL6Az5qw5.Ds0GNro4xZ70e.jI4ybG",
     "nivel": "master",
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJTYW5kcm8iLCJuaXZlbCI6Im1hc3RlciIsImV4cCI6MTc0ODM2ODcyN30._PRoPdJ0LW_wKxAe1E2QhlrTaE3K9ZMbsxOXCVhcZ38"
+  },
+  {
+    "usuario": "User",
+    "senha_hash": "$2b$12$7AYAKQF6Pmgll8zsgl50Y.NGSgc0OUUooOSaVYr1WBIzl22K7vkcK",
+    "nivel": "usuario",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJVc2VyIiwibml2ZWwiOiJ1c3VhcmlvIiwiZXhwIjoxNzQ4NDM1MjEwfQ.vEFLCF9kZJWkyJhJBw-9fKkvAgDaD57XHfEwo3GKiNA"
+  },
+  {
+    "usuario": "Manager",
+    "senha_hash": "$2b$12$6gA.xE6UiYHJhrSlCjdIG.DiwRHZwlAuio/2Jnx4n9ijcBidjR4te",
+    "nivel": "gestor",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJNYW5hZ2VyIiwibml2ZWwiOiJnZXN0b3IiLCJleHAiOjE3NDg0MzUyMjF9.Vq1yRsk4PRWEuEP66TVWlEpJvWPpHW4UoeSsMeFxnnQ"
   }
 ]

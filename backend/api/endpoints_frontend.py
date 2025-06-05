@@ -29,3 +29,14 @@ def usuarios_web(request: Request):
 @router.get("/entregas/web", response_class=HTMLResponse)
 def entregas_web(request: Request):
     return templates.TemplateResponse("entregas.html", {"request": request})
+
+@router.get("/etiqueta/reimpressao/web", response_class=HTMLResponse)
+def reimpressao_etiquetas_web(request: Request):
+    from glob import glob
+    etiquetas = glob("files/etiquetas/*.pdf")  # ou outro caminho onde as etiquetas estão
+    etiquetas = [e.replace("\\", "/") for e in etiquetas]
+    return templates.TemplateResponse("etiquetas.html", {"request": request, "etiquetas": etiquetas})
+
+@router.get("/validacao/web", response_class=HTMLResponse)
+def validacao_web(request: Request):
+    return templates.TemplateResponse("validacao.html", {"request": request})

@@ -21,10 +21,24 @@
       background-color: #0056b3;
     }
     label { font-weight: bold; display: block; margin-top: 12px; }
+    .top-buttons {
+      display: flex; justify-content: space-between; margin-bottom: 10px;
+    }
+    .top-buttons button {
+      width: 48%; background-color: #6c757d;
+    }
+    .top-buttons button:hover {
+      background-color: #5a6268;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="top-buttons">
+      <button onclick="window.location.href='/painel/web'">Voltar</button>
+      <button id="btnDashboard" style="display: none" onclick="window.location.href='/dashboard/entregas'">📊 Dashboard</button>
+    </div>
+
     <h2>📦 Registrar Entrega</h2>
     <label for="codigoVolume">Código do Volume:</label>
     <input type="text" id="codigoVolume" list="sugestoes" placeholder="Ex: MP-35820-1239-2" autocomplete="off" required>
@@ -66,6 +80,19 @@
         }
       }, 300); // debounce
     });
+
+    (function validarPermissao() {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.nivel === 'master' || payload.nivel === 'gestor') {
+          document.getElementById("btnDashboard").style.display = "inline-block";
+        }
+      } catch (e) {
+        console.warn("Erro ao verificar nível de acesso.", e);
+      }
+    })();
   </script>
 </body>
 </html>
